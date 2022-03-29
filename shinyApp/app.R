@@ -43,7 +43,7 @@ server <- function(input, output) {
       geom_bar(position="dodge", stat="identity")+
       facet_wrap(~Pop.Type, scales = "free_y") +
       theme_bw()+
-      labs(title= 'Current 65+ and future eligible auto enrollees (10 years)', 
+      labs(title= 'Current 65+ and future (10 year) total eligible auto enrollees', 
            x = "County.Size", y = "Million")
     
   })
@@ -72,6 +72,8 @@ server <- function(input, output) {
     # Choosing just a few columns to display
     data <- poptot[, c('State', 'County', 'FIPSCode', 'County.Size',
                        'TotalPop', "Total.65plus", "Pop.eligible")]
+    colnames(data) = c('State', 'County', 'FIPSCode', 'County.Size',
+                       'TotalPop', "Total.65plus", "Pop.eligible(10 yrs)")
     data
   },
   rownames = F,
@@ -295,7 +297,7 @@ server <- function(input, output) {
                 position = position_dodge(width=0.9), vjust=-0.25) +
       facet_wrap(~rating.range) +
       theme_bw()+
-      labs(title= 'Number of counties w/o eligible plans',
+      labs(title= 'Number of counties w/ & w/o eligible plans',
            x = "County.Size", y = "N")
   
   })
@@ -456,21 +458,32 @@ ui <- shinyUI(fluidPage(
     tabPanel("Welcome", # tabPanel() creates the tabs
              tags$head(tags$style("h2 {color: #b4044d; } h1 {color: #047cb4}; }")), # this is setting the color palette for our tab headers 1 and 2
              #headerPanel("About the App"), # I haven't created a title for this page, try adding one!
-             h4("This App visualizes the county population and the county level eligible Medicare Advantage (MA) plans (for auto-enrollment) 
-             given the illustrative policy choices. Visualization including table, bar charts and mapping "),
+             h4("This app presents some descriptive analyses of the data used to analyze the budget effects of an
+                illustrative policy. The illustrative policy is designed to auto-enroll eligible people into certain Medicare Advantage (MA) 
+                plans. The MA plans for autoenrollment are determined based on their characteristics such as risk rating, premium, out-of-pocket (OOP) maximum, etc."),
+             h4("Specifically, this App visualizes the county population and the county level eligible Medicare Advantage (MA) plans (for auto-enrollment) 
+             given the illustrative policy choices. Visualization contains table, bar charts and mapping."),
+             h4(tags$em("NOTE: The work shown here is not affliated with my employer(s)")),
              # br(), #a break creates a space
              h2("How to Use This App"), # the number following h corresponds to size
-             h4(tags$ul(
+             h4("There are two main tabs in this app, under each tab, you can choose from multiple panels for different visualizations.",
+              tags$ul(
+               tags$br(),
                tags$li(tags$b("County Population:"), "Display summary and county level population, including CURRENT total population and 65+ elderly, as well as potential 
                        MA eligible population in the FUTURE 10 years. Each county is categorized as 'Bottom 25%', 'Middle 50%' and 'Top 25%' based on
                        on the county population size."
                        ),
                tags$br(), # add a line break
-               tags$li(tags$b("MA Plan selection:"), "Display summary and detailed county level MA plan data under different policy selections"))), #bullet point"),
+               tags$li(tags$b("MA Plan selection:"), "Display summary and detailed county/state level MA plan data under different policy selections."))), #bullet point"),
              h4(""),
              h4(""),
              h2("The Data"),
-             h4("ACS, CMS, PWBM Microsim")),
+             h4("The data used in this visualization",
+                tags$li("American Community Survey (ACS): derive the county level population."),
+                tags$li("Centers for Medicare & Medicaid Services (CMS): derive the county-level Medicare Advantage plan eligibility and the corresponding
+                        MA plan characteristics."),
+                tags$li("PWBM Microsimulation: project the eligible population for MA plan auto-enrollment.")
+                )),
     
     #-------------------------
     # Population Tab
@@ -483,14 +496,15 @@ ui <- shinyUI(fluidPage(
                          #first panel shows regression table
                          tabPanel("Population Plot",
                                   plotOutput("plot1"),
-                                  helpText("")),
+                                  helpText("The plots here show the current 65+ elderly population size and the 
+                                           potential MA auto-enrollees in the future 10 years, by county size")),
                          tabPanel("Population Table",
                                   div(DT::dataTableOutput("table1_1"), style = "font-size: 100%; width: 75%"),
                                   helpText("")),
                          tabPanel("Population Mapping",
                                   selectInput("map1_var",
                                               "Population (Thousands):",
-                                              c('TotalPop', 'Total.65plus', 'Pop.eligible')),
+                                              c('TotalPop', 'Total.65plus', 'Pop.eligible(10 yrs)')),
                                   leafletOutput("map1", width = "100%", height = "800px"),
                                   helpText("")),
                          tabPanel("Deatiled County Population",
@@ -539,10 +553,12 @@ ui <- shinyUI(fluidPage(
                                   #first panel shows regression table
                                   tabPanel("MA Plans",
                                            plotOutput("plot2_1"),
-                                           helpText("")),
-                                  tabPanel("States w/o eligible plans",
+                                           helpText("Given certain MA plan selections, the plots here show the number of
+                                                    eligible plans for each category of the county by plan type.")),
+                                  tabPanel("States w/ & w/o eligible plans",
                                            plotOutput("plot2_2"),
-                                           helpText("")),
+                                           helpText("Given certain MA plan selections, the plots here show the number (&%) of counties
+                                                    that have or do not have eligible plans, by county size.")),
                                   tabPanel("Plan Table",
                                            
                                            # headerPanel("Examine the Data"),
