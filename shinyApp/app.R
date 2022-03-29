@@ -444,29 +444,29 @@ server <- function(input, output) {
 ############### UI ####################
 #######################################
 ui <- shinyUI(fluidPage(
-  theme = shinytheme("flatly"),
+  theme = shinytheme("yeti"),
   # This applies preset aesthetic decisions to the entire app
   navbarPage(
-    "MA Auto-Enrollment Project",
+    "MA Auto-Enrollment",
     # navbarPage lets us set up a navigation bar to toggle between tabPanels
     
     #-------------------------
     # Welcome Tab
     #-------------------------  
     tabPanel("Welcome", # tabPanel() creates the tabs
-             tags$head(
-               tags$style("h2 {color: #04B4AE; }
-               h1 {color: #04B4AE}; }")), # this is setting the color palette for our tab headers 1 and 2
-             headerPanel("About the App"), # I haven't created a title for this page, try adding one!
-             h4("This App visualizes the county population and the county level eligible MA plans (for auto-enrollment)
-                data under given given policy choices"),
+             tags$head(tags$style("h2 {color: #b4044d; } h1 {color: #047cb4}; }")), # this is setting the color palette for our tab headers 1 and 2
+             #headerPanel("About the App"), # I haven't created a title for this page, try adding one!
+             h4("This App visualizes the county population and the county level eligible Medicare Advantage (MA) plans (for auto-enrollment) 
+             given the illustrative policy choices. Visualization including table, bar charts and mapping "),
              # br(), #a break creates a space
              h2("How to Use This App"), # the number following h corresponds to size
              h4(tags$ul(
-               tags$li("Population: Display county level population (total, 65+ and MA eligible population)"), #bullet point
-               tags$li("MA Plan selection: Display summary and detailed county level MA plan data under different policy selections") #bullet point
-                )),
-             h4(""),
+               tags$li(tags$b("County Population:"), "Display summary and county level population, including CURRENT total population and 65+ elderly, as well as potential 
+                       MA eligible population in the FUTURE 10 years. Each county is categorized as 'Bottom 25%', 'Middle 50%' and 'Top 25%' based on
+                       on the county population size."
+                       ),
+               tags$br(), # add a line break
+               tags$li(tags$b("MA Plan selection:"), "Display summary and detailed county level MA plan data under different policy selections"))), #bullet point"),
              h4(""),
              h4(""),
              h2("The Data"),
@@ -476,7 +476,7 @@ ui <- shinyUI(fluidPage(
     # Population Tab
     #-------------------------
     tabPanel("County Population",
-             tags$head(tags$style("h2 {color: #ee5500; } h1 {color: #04B4AE}; }")),
+             tags$head(tags$style("h2 {color: #b4044d; } h1 {color: #047cb4}; }")),
              # headerPanel( "Plotting Population"),
              #create a 1st tab panel
              tabsetPanel(type = "tabs", 
