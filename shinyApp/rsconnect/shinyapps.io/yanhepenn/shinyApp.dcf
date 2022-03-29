@@ -1,0 +1,11 @@
+name: shinyApp
+title: shinyApp
+username:
+account: yanhepenn
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5285697
+bundleId: 5340898
+url: https://yanheupenn.shinyapps.io/shinyApp/
+when: 1638897390.25182
+lastSyncTime: 1638897390.25182
